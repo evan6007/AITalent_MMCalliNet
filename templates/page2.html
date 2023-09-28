@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>智力預測</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+
+
+    <div class="main-content">
+        <div class="options">
+            <div class="option" id="option2-1" onclick="showUploadSection('uploadSection1')">
+                <div class="option-content">
+                    <img src="{{ url_for('static', filename='near_page2.png') }}" alt="Icon 1">                    
+                </div>               
+            </div>
+            <div class="option" id="option2-2" onclick="showUploadSection('uploadSection2')">
+                <div class="option-content">
+                    <img src="{{ url_for('static', filename='listen_page2.png') }}" alt="Icon 2">                   
+                </div>               
+            </div>
+            <div class="option" id="option2-3" onclick="showUploadSection('uploadSection3')">
+                <div class="option-content">
+                    <img src="{{ url_for('static', filename='singleword_page2.png') }}" alt="Icon 3">
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    
+    <img class="instruction" id="instruction1" src="{{ url_for('static', filename='近遠端圖片讚讚.png') }}" alt="近遠端黑板說明" width="1500">
+    <input class="instruction-file" type="file" id="fileInput1">
+
+    <img class="instruction" id="instruction2" src="{{ url_for('static', filename='聽力圖片讚讚.png') }}" alt="聽力黑板說明" width="1500">
+    <input class="instruction-file" type="file" id="fileInput2">
+
+    <img class="instruction" id="instruction3" src="{{ url_for('static', filename='獨字圖片讚讚.png') }}" alt="獨字黑板說明" width="1500">
+    <input class="instruction-file" type="file" id="fileInput3">
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <canvas id="canvas" width="300" height="300" style="border:1px solid #d3d3d3;"></canvas>
+            <button id="btnCrop">Crop</button>
+            <canvas id="magnifier" width="150" height="150"></canvas>
+            <span class="close">&times;</span>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <a id="sakana"><img src="{{ url_for('static', filename='sakana_loading.gif') }}"></a>
+    </div>
+
+    <nav class="navbar">
+        <div class="home-icon">
+            <a href="/"><img src="{{ url_for('static', filename='indexicon.png') }}" alt="Home" width="100" height="80"></a>
+        </div>
+
+        <div class="nav-links">
+            <div class="dropdown">
+                <a href="">關於國北護</a>
+                <div class="dropdown-content">
+                    <a href="https://www.ntunhs.edu.tw/">國北護網站</a>
+                    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Regular_Style_CJKV_Radical_186_%280%29.svg/1200px-Regular_Style_CJKV_Radical_186_%280%29.svg.png">國北護的秘密</a>
+                    <!-- add as many as you need -->
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="">關於淡江</a>
+                <div class="dropdown-content">
+                    <a href="https://www.tku.edu.tw/">淡江網站</a>
+                    <a href="https://www.ais.tku.edu.tw/EleCos/login.aspx?ReturnUrl=%2felecos%2f">選課系統</a>
+                    <!-- add as many as you need -->
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="">服務介紹</a>
+                <div class="dropdown-content">
+                    <a href="/">智力測驗</a>
+                    <a href="https://megapx-assets.dcard.tw/images/ae450e9e-7162-45ca-b1d5-3120018092d5/640.webp">超級巨猛測驗</a>
+                    <!-- add as many as you need -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+
+    <script>
+         // Get references to the canvas, confirm button, crop button, file input, and magnifier canvas
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let fileInput1 = document.getElementById('fileInput1');
+        let fileInput2 = document.getElementById('fileInput2');
+        let fileInput3 = document.getElementById('fileInput3');
+        
+        let btnCrop = document.getElementById('btnCrop');
+        let img = new Image();
+        let magnifierCanvas = document.getElementById('magnifier');
+        let magnifierCtx = magnifierCanvas.getContext('2d');
+        let reader = new FileReader();
+        let modalContent = document.querySelector('.modal-content');
+
+        // Initialize an empty list of points
+        let points = [];
+        // Initialize the index of the point being dragged to null
+        let draggingPoint = null;
+
+        let globalSquares = null; // 定義全局變數
+
+        function showUploadSection(sectionID) {
+            // 先隱藏所有的說明圖片和輸入框
+            var instructionImages = document.querySelectorAll('.instruction');
+            var instructionFiles = document.querySelectorAll('.instruction-file');
+            
+            for(var i = 0; i < instructionImages.length; i++) {
+                instructionImages[i].style.display = 'none';
+            }
+            for(var i = 0; i < instructionFiles.length; i++) {
+                instructionFiles[i].style.display = 'none';
+            }
+
+            // 根據 sectionID 來決定要顯示哪個說明圖片和輸入框
+            if (sectionID === 'uploadSection1') {
+                document.getElementById('instruction1').style.display = 'block';
+                document.getElementById('fileInput1').style.display = 'block';
+            } else if (sectionID === 'uploadSection2') {
+                document.getElementById('instruction2').style.display = 'block';
+                document.getElementById('fileInput2').style.display = 'block';
+            } else if (sectionID === 'uploadSection3') {
+                document.getElementById('instruction3').style.display = 'block';
+                document.getElementById('fileInput3').style.display = 'block';
+            }
+            // 如果還有更多的 section、說明圖片和輸入框，可以繼續在這裡加條件
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            // 檢查 localStorage 的值
+            if (localStorage.getItem('triggerOption2_1') === 'true') {
+                var option2_1 = document.getElementById('option2-1');
+                if (option2_1 && typeof option2_1.onclick === 'function') {
+                    option2_1.onclick();
+                }
+                // 清除 localStorage 的值，以確保這不會在下次加載時再次觸發
+                localStorage.removeItem('triggerOption2_1');
+            }
+        });
+        window.addEventListener('DOMContentLoaded', function() {
+            // 檢查 localStorage 的值
+            if (localStorage.getItem('triggerOption2_2') === 'true') {
+                var option2_1 = document.getElementById('option2-2');
+                if (option2_1 && typeof option2_1.onclick === 'function') {
+                    option2_1.onclick();
+                }
+                // 清除 localStorage 的值，以確保這不會在下次加載時再次觸發
+                localStorage.removeItem('triggerOption2_2');
+            }
+        });
+        window.addEventListener('DOMContentLoaded', function() {
+            // 檢查 localStorage 的值
+            if (localStorage.getItem('triggerOption2_3') === 'true') {
+                var option2_1 = document.getElementById('option2-3');
+                if (option2_1 && typeof option2_1.onclick === 'function') {
+                    option2_1.onclick();
+                }
+                // 清除 localStorage 的值，以確保這不會在下次加載時再次觸發
+                localStorage.removeItem('triggerOption2_3');
+            }
+        });
+
+        // References to modal and close button
+        let modal = document.getElementById('modal');
+        let closeBtn = modal.querySelector('.close');
+
+        fileInput1.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files.length) {
+            let file = e.target.files[0];
+            let fileName = file.name;
+            localStorage.setItem('filename', fileName);
+            reader.onload = function(e) {
+                img.onload = function() {
+                    // 計算縮放比例
+                    let maxWidth = 1000;
+                    let maxHeight = 1500;
+                    let ratio = Math.min(maxWidth / img.width, maxHeight / img.height);
+                    canvas.width = img.width * ratio;
+                    canvas.height = img.height * ratio;
+
+                    // 設置 modal-content 的寬度以匹配 canvas 的寬度
+                    modalContent.style.width = canvas.width + 'px';
+
+                    const base64String = reader.result.replace('data:', '').replace(/^.+,/, ''); 
+                    let data = {
+                        imageData1: base64String,
+                        displayWidth: canvas.width,
+                        displayHeight: canvas.height
+                    };
+                    /*Send the data to the server*/
+                    fetch('/process_image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        globalSquares = data.squares; // 將 data.squares 的值賦予全局變數
+                        if (globalSquares && points.length === 0) {
+                            // 如果 globalSquares 存在且 points 為空，則使用 globalSquares 的值
+                            points = globalSquares.map(pt => ({x: pt[0], y: pt[1]}));
+                        }
+                        redraw(); // 當圖像加載完成後調用 redraw
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // 顯示彈窗
+            modal.style.display = 'block';
+        }
+    });
+
+
+
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            fileInput1.value = '';
+            points = []; // 清空點的陣列
+            redraw(); // 重新繪製畫布以消除之前的點
+        });
+        
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                fileInput1.value = '';
+                points = []; // 清空點的陣列
+                redraw(); // 重新繪製畫布以消除之前的點
+            }
+            
+        });
+
+        canvas.addEventListener('mousedown', function(e) {
+            magnifierCanvas.style.display = 'block'; // 顯示放大鏡
+            let rect = canvas.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            // 考慮模態框的位置，更新放大鏡的位置
+            magnifierCanvas.style.left = (x - magnifierCanvas.width / 2) + 'px';
+            magnifierCanvas.style.top = (y - magnifierCanvas.height / 2) + 'px';
+
+            // 如果拖曳點，更新它的位置並重繪canvas
+            if (draggingPoint !== null) {
+                points[draggingPoint] = {x: x, y: y};
+                redraw();
+
+                // 清除放大鏡canvas並在其上繪製主canvas的放大部分
+                magnifierCtx.clearRect(0, 0, magnifierCanvas.width, magnifierCanvas.height);
+                magnifierCtx.drawImage(canvas, x - 38, y - 38, 75, 75, 0, 0, magnifierCanvas.width, magnifierCanvas.height);
+            } else {
+                // Add a new point or start dragging an existing point
+                if (points.length < 4) {
+                    if (globalSquares && points.length === 0) {
+                        // 如果 globalSquares 存在且 points 為空，則使用 globalSquares 的值
+                        points = globalSquares.map(pt => ({x: pt[0], y: pt[1]}));
+                    } else {
+                        points.push({x: x, y: y});
+                    }
+                } else {
+                    draggingPoint = points.findIndex(point => {
+                        return Math.abs(point.x - x) < 10 && Math.abs(point.y - y) < 10;
+                    });
+                }
+
+                // Enable the crop button when four points have been selected
+                if (points.length === 4) {
+                    btnCrop.disabled = false;
+                }
+                redraw();
+            }
+        });
+
+        // Stop dragging when the mouse is released
+        canvas.addEventListener('mouseup', function(e) {
+            magnifierCanvas.style.display = 'none'; // 隱藏放大鏡
+            draggingPoint = null;
+        });
+
+        canvas.addEventListener('mousemove', function(e) {
+            let rect = canvas.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            // 考慮模態框的位置，更新放大鏡的位置
+            magnifierCanvas.style.left = (x - magnifierCanvas.width / 2) + 'px';
+            magnifierCanvas.style.top = (y - magnifierCanvas.height / 2) + 'px';
+
+            // 如果拖曳點，更新它的位置並重繪canvas
+            if (draggingPoint !== null) {
+                points[draggingPoint] = {x: x, y: y};
+                redraw();
+
+                // 清除放大鏡canvas並在其上繪製主canvas的放大部分
+                magnifierCtx.clearRect(0, 0, magnifierCanvas.width, magnifierCanvas.height);
+                magnifierCtx.drawImage(canvas, x - 38, y - 38, 75, 75, 0, 0, magnifierCanvas.width, magnifierCanvas.height);
+            }
+        });
+
+
+
+
+        // Remove the last point when the delete or backspace key is pressed
+        document.addEventListener('keydown', function(e) {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && points.length > 0) {
+                points.pop();
+                redraw();
+            } else if (e.key === 'z' && e.ctrlKey && points.length > 0) {
+                // Ctrl + Z 被按下
+                points.pop();
+                redraw();
+            } else if (e.key === "Escape") {
+                modal.style.display = 'none';
+                fileInput1.value = '';
+                points = []; // 清空點的陣列
+                redraw(); // 重新繪製畫布以消除之前的點
+            }
+        });
+
+
+
+        btnCrop.addEventListener('click', function() {
+            const base64String = reader.result.replace('data:', '').replace(/^.+,/, ''); 
+
+            // Prepare the data to send to the server
+            let data = {
+                points: points,
+                imageData: base64String,
+                displayWidth: canvas.width,
+                displayHeight: canvas.height
+            };
+
+            loading.style.display = 'block';
+
+            /*Send the data to the server*/
+            fetch('/process_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                
+                if(data.radar_image) {
+                    localStorage.setItem('radarImage', data.radar_image);
+                }
+                if(data.nor_radar_image) {
+                    localStorage.setItem('norradarImage', data.nor_radar_image);
+                }
+                if(data.gaussian_image) {                    
+                    localStorage.setItem('gaussianImage', data.gaussian_image);
+                }
+
+
+                if(data.converted_data) {                    
+                    localStorage.setItem('converted_data', data.converted_data);
+                }
+
+                console.log(data.converted_data)
+
+
+                if(data.FSIQ) {
+                    localStorage.setItem('FSIQ', data.FSIQ);
+                }
+                if(data.VCI) {                    
+                    localStorage.setItem('VCI', data.VCI);
+                }
+                if(data.WMI) {
+                    localStorage.setItem('WMI', data.WMI);
+                }
+                if(data["PRI/VSI"]) {                    
+                    localStorage.setItem(["PRI/VSI"], data["PRI/VSI"]);
+                }
+                if(data.PSI) {                    
+                    localStorage.setItem('PSI', data.PSI);
+                }
+                
+                setTimeout(() => {
+                    // 創建新窗口
+                    let newWindow = window.open("./page3", "_blank");
+                    // 刷新窗口
+                    window.location.reload();
+                    
+                }, 1000);
+            })
+
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        });
+
+
+
+        // Redraw the canvas
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width,  canvas.height);  // draw the image at size 500x500
+            if (points.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                if (points.length === 4) {
+                    ctx.closePath();
+                }
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                for (let i = 0; i < points.length; i++) {
+                    ctx.beginPath();
+                    ctx.arc(points[i].x, points[i].y, 10, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'black';
+                    ctx.globalAlpha = 0.5;  // Set the opacity to 50%
+                    ctx.fill();
+                    ctx.globalAlpha = 1;  // Reset the opacity back to 100%
+                }
+            }
+
+            magnifierCtx.clearRect(0, 0, magnifierCanvas.width, magnifierCanvas.height);
+        }
+
+
+
+    </script>
+</body>
+</html>

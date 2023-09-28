@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>魏氏智力分布圖</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="home-icon">
+            <a href="/"><img src="{{ url_for('static', filename='indexicon.png') }}" alt="Home" width="100" height="80"></a>
+        </div>
+
+    <div class="nav-links">
+        <div class="dropdown">
+            <a href="">關於國北護</a>
+            <div class="dropdown-content">
+                <a href="https://www.ntunhs.edu.tw/">國北護網站</a>
+                <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Regular_Style_CJKV_Radical_186_%280%29.svg/1200px-Regular_Style_CJKV_Radical_186_%280%29.svg.png">國北護的秘密</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="">關於淡江</a>
+            <div class="dropdown-content">
+                <a href="https://www.tku.edu.tw/">淡江網站</a>
+                <a href="https://www.ais.tku.edu.tw/EleCos/login.aspx?ReturnUrl=%2felecos%2f">選課系統</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="">服務介紹</a>
+            <div class="dropdown-content">
+                <a href="/">智力測驗</a>
+                <a href="https://megapx-assets.dcard.tw/images/ae450e9e-7162-45ca-b1d5-3120018092d5/640.webp">超級巨猛測驗</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+    </div>
+
+    </nav>
+    <h1 id="filenameDisplay"></h1>
+    <div class="page3container">
+        <div class="content-wrapper">
+            <div class="page3Img_chart">
+                <img src="" alt="fail" id="radar" class="chart active">
+                <img src="" alt="fail" id="norradar" class="chart">
+                <img src="" alt="fail" id="gaussian" class="chart">
+                <div id="lines-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+            </div>
+
+        
+            <div class="rounded-box-container">
+                <div id="FSIQ-box" class="rounded-box" onclick="toggleLine(1)"></div>
+                <div id="VCI-box" class="rounded-box" onclick="toggleLine(2)"></div>
+                <div id="WMI-box" class="rounded-box" onclick="toggleLine(3)"></div>
+                <div id="PRI-box" class="rounded-box" onclick="toggleLine(4)"></div>
+                <div id="PSI-box" class="rounded-box" onclick="toggleLine(5)"></div>
+            </div>            
+            
+        </div>
+        <div class="page3btn_chart">
+            <button onclick="showRadar()">雷達圖</button>
+            <button onclick="showNorRadar()">趨勢雷達圖</button>
+            <button onclick="showGaussian()">常態分布圖</button>
+        </div>
+    </div>
+    
+        
+
+</body>
+<script>
+
+    let retrievedFileName = localStorage.getItem('filename');
+    if (retrievedFileName) {
+    document.getElementById('filenameDisplay').textContent = "案例 "+retrievedFileName;
+}
+
+    window.onload = function() {
+        fetch('/process_image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // 如果需要傳遞任何特定的數據到後端，加在這裡
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 處理雷達圖
+            let imageBase64 = localStorage.getItem('radarImage');
+            let image64 = localStorage.getItem('gaussianImage');
+            let norimageBase64 = localStorage.getItem('norradarImage');
+            let converted_data = localStorage.getItem('converted_data');
+            console.log(converted_data)
+            console.log(typeof converted_data)
+            converted_data=JSON.parse(converted_data)
+
+            let gaussianline = converted_data.map(item => item[2][0]);
+            console.log(gaussianline[0]); 
+
+            let gaussianImg = document.getElementById('gaussian');
+            let linesContainer = document.querySelector('.page3Img_chart');
+            let gaussianLP = [gaussianline[0], gaussianline[1], gaussianline[2], gaussianline[3], gaussianline[4]];
+            gaussianLP.forEach((x, index) => {
+                const line = document.createElement('div');
+                line.classList.add('line');
+                line.classList.add(`line${index + 1}`); // 為每條線添加一個特定的類，以便設定顏色
+                line.style.left = `${x}px`; // 設定x座標
+                document.getElementById('lines-container').appendChild(line);
+            });
+                        
+            
+            let FSIQ = localStorage.getItem('FSIQ');
+            let VCI = localStorage.getItem('VCI');
+            let WMI = localStorage.getItem('WMI');
+            let PRI = localStorage.getItem(["PRI/VSI"]);
+            let PSI = localStorage.getItem('PSI');
+
+            if(imageBase64) {
+                let radarImg = document.getElementById('radar');
+                radarImg.src = 'data:image/png;base64,' + imageBase64;
+            }
+
+            // 處理高斯分布圖
+            if(image64) {
+                let gaussianImg = document.getElementById('gaussian');
+                gaussianImg.src = 'data:image/png;base64,' + image64;
+            }
+
+            if(norimageBase64) {
+                let norradarImage = document.getElementById('norradar');
+                norradarImage.src = 'data:image/png;base64,' + norimageBase64;
+            }
+
+            console.log(data)
+            // Optional: 清除 localStorage 中的雷達圖資料
+            //localStorage.removeItem('radarImage');
+            document.getElementById('FSIQ-box').textContent = "(FSIQ)我的全量表智商為: " + FSIQ;
+            document.getElementById('VCI-box').textContent = "(VCI)我的語文理解指數為: " + VCI;
+            document.getElementById('WMI-box').textContent = "(WMI)我的工作記憶指數為: " + WMI;
+            document.getElementById('PRI-box').textContent = "(PRI/VSI)我的知覺推理/視覺空間為: " + PRI;
+            document.getElementById('PSI-box').textContent = "(PSI)我的處理速度指數為: " + PSI;
+        })
+
+        .catch(error => {
+            console.error("Error fetching the images:", error);
+        });
+    }
+
+    function showRadar() {
+    document.getElementById('radar').classList.add('active');
+    document.getElementById('gaussian').classList.remove('active');
+    document.getElementById('norradar').classList.remove('active');
+
+    let boxes = document.querySelectorAll('.rounded-box');
+    boxes.forEach(box => {
+        box.style.pointerEvents = 'none';
+    });
+    
+    document.querySelector('.line1').style.display = 'none';
+    document.querySelector('.line2').style.display = 'none';
+    document.querySelector('.line3').style.display = 'none';
+    document.querySelector('.line4').style.display = 'none';
+    document.querySelector('.line5').style.display = 'none';
+    }
+
+    function showGaussian() {
+    document.getElementById('gaussian').classList.add('active');
+    document.getElementById('radar').classList.remove('active');
+    document.getElementById('norradar').classList.remove('active');
+
+    let boxes = document.querySelectorAll('.rounded-box');
+    boxes.forEach(box => {
+        box.style.pointerEvents = 'auto';
+    });
+
+    document.querySelector('.line1').style.display = 'block';
+    document.querySelector('.line2').style.display = 'block';
+    document.querySelector('.line3').style.display = 'block';
+    document.querySelector('.line4').style.display = 'block';
+    document.querySelector('.line5').style.display = 'block';
+    }
+
+    function showNorRadar() {
+    document.getElementById('radar').classList.remove('active');
+    document.getElementById('gaussian').classList.remove('active');
+    document.getElementById('norradar').classList.add('active');
+
+    let boxes = document.querySelectorAll('.rounded-box');
+    boxes.forEach(box => {
+        box.style.pointerEvents = 'none';
+    });
+
+    document.querySelector('.line1').style.display = 'none';
+    document.querySelector('.line2').style.display = 'none';
+    document.querySelector('.line3').style.display = 'none';
+    document.querySelector('.line4').style.display = 'none';
+    document.querySelector('.line5').style.display = 'none';
+    }
+
+    function toggleLine(lineNumber) {
+    const lineElement = document.querySelector('.line' + lineNumber);
+    if (lineElement.style.display === 'none' || !lineElement.style.display) {
+        lineElement.style.display = 'block';
+    } else {
+        lineElement.style.display = 'none';
+    }
+}
+
+
+</script>
+
+</html>

@@ -1,0 +1,482 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #d5e2d7;
+    font-family: Arial, sans-serif;
+    margin-top: 60px;
+}
+
+/*
+body {
+background-color:#fa8888;
+background-color:#fcabab;
+background-color:#fcdcdc;
+}
+*/
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 120px;
+    position: fixed;
+}
+
+
+.upload-container {
+    width: 100%;
+    max-width: 800px;  /* 或其他適合的寬度 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;  /* 給予一些下邊距 */
+}
+
+/* 隱藏所有內容區塊 */
+.content {
+    display: none;
+}
+
+/* 顯示選擇的內容區塊 */
+.content.active {
+    display: block;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #3c493c;
+    padding: 20px;
+    background-color: #eff4ee;
+    border-radius: 10px;
+    color: #e94560;
+    width: 1800px;
+    height: 700px;
+}
+form input[type=file] {
+    margin: 20px 0;
+}
+form button {
+    background-color: #e94560;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+form button:hover {
+    background-color: #0f3460;
+}
+
+
+#uploadSection1 , 
+#uploadSection2,
+#uploadSection3{
+    margin-top: 100px; /* 調整uploadSection項目與上方內容的間距，您可以根據需要進行調整 */
+}
+
+
+
+/* 設定選項樣式 */
+.option {
+    flex: 1;
+    margin: 0 10px;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    color: black;
+    width: 300px; /* 設定寬度為 250px */
+    height: 300px; /* 設定高度為 250px */
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* 將 align-items 設為 flex-start */
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* 將 justify-content 設為 space-between */
+    margin: 0 50px;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: black;
+    background-color: #e5eee7;
+    text-decoration: none;
+    width: 300px;
+    height: 300px;
+    font-size: 24px;
+    font-family: "Microsoft YaHei";
+    font-weight: bold;
+}
+
+#option1 img,
+#option2 img,
+#option3 img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    margin-left: 10px; /* 將圖片向右移動 10px */
+}
+
+
+.option.active {
+    width: 200px;
+    height: 200px;
+    font-size: 18px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* 添加鼠标悬停效果 */
+.option:hover {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+    transform: translateY(-10px); /* 往上抬高一点 */
+    transition: box-shadow 0.3s, transform 0.0s; /* 添加过渡效果 */
+}
+
+#option1 {
+    background-color: #a7cdc3; /* PaleGreen */
+}
+#option2 {
+    background-color: #d0bcbc; /* PeachPuff */
+}
+#option3 {
+    background-color: hsl(246, 18%, 77%)/* LightBlue */
+}
+
+/* 修改選項方塊的大小 */
+#option2-1,
+#option2-2,
+#option2-3 {
+    width: 400px;
+    height: 50px;
+    background-color: #a7cdc3; /* PaleGreen */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    
+}
+
+#option2-1 img,
+#option2-2 img,
+#option2-3 img {
+    width: 400px; /* 調整小圖標的大小 */
+    height: 85px;
+    margin-bottom: -10px; /* 在圖片下面添加一些底邊距 */
+}
+
+#option2-1 {
+    background-color: #a7cdc3; /* PaleGreen */
+}
+
+
+#option2-2 {
+    background-color: #d0bcbc; /* PeachPuff */
+}
+
+#option2-3 {
+    background-color: hsl(246, 18%, 77%); /* LightBlue */
+}
+
+.option.hidden {
+    display: none;
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    background-color: #e6ebe6;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.navbar a {
+    color: #000000;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 23px;
+}
+
+
+.home-icon {
+    margin-left: 100px;  /* adjust this as needed */
+}
+
+.navbar a:hover {
+    color: #222e28;
+}
+
+@media screen and (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+    }
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    width: 30%;  /* adjust this as needed */
+    margin: auto;  /* add this line */
+    margin-left: 450px;   /*add this line */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    z-index: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #f9f9f9; /* Change as needed */
+    border: 1px solid #ddd; /* Change as needed */
+    padding: 8px 12px; /* Decreased padding */
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    background-color: #eaf0ff; /* Set the background color for "關於國北護" */
+    padding: 8px 12px;  /* Decreased padding */
+    text-decoration: none;
+    display: block;
+    text-align: center;  /* Added this line */
+    font-size: 16px;
+
+}
+
+
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #b6d1c2;  /* Change as needed */
+}
+
+
+
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 300; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe00;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative; /* 這是必要的，以使其子元素可以使用絕對定位 */
+}
+
+
+#magnifier {
+    position: absolute;
+    display: none; /* 預設為隱藏 */
+    top: 0px;  /* 初始位置 */
+    right: 0px;  /* 初始位置 */
+    z-index: 250; /* 確保它位於其他元素之上 */
+    border: 1px solid #d3d3d3;
+    pointer-events: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+
+.close {
+    font-size: 2em;  
+    position: absolute;
+    top: 30px; /* 你可以根據需要調整這個值 */
+    right: 30px; /* 同上 */
+    cursor: pointer; /* 讓鼠標在滑過時變成手指，表示這是一個可點擊的元素 */
+    z-index: 300;
+}
+
+
+.loading {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 400; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+#sakana{
+    margin: 0;  /* 移除默认的margin */
+    height: 100vh;  /* 使body占满视口的高度 */
+    z-index: 400; /* 確保它位於其他元素之上 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart {
+    display: none;  /* 預設隱藏所有圖 */
+}
+
+.chart.active {
+    display: block;  /* 顯示當前活動的圖 */
+}
+
+#gaussian{
+    background-color:white
+}
+
+
+.page3container {
+    float: left;
+    width: auto;
+    display: block;
+    text-align: left;
+}
+
+.page3Img_chart {
+    display: block;
+    text-align: center; /* 圖片在容器的中間 */
+    position: relative;
+}
+
+.page3btn_chart {
+    display: block;
+    text-align: center; /* 按鈕在容器的中間 */
+    margin-top: 10px;
+    flex: 0 0 auto;  /* 這表示圖片區域不會伸縮 */
+    margin-right: 20px;  /* 為圖片和文字之間提供一些間距 */
+}
+
+.page3btn_chart button {
+    margin: 0 5px;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.rounded-box-container {
+    display: flex;
+    flex-direction: column;  /* 將方向改為垂直 */
+    gap: 10px; /* 設定方形之間的間距 */
+}
+
+
+
+
+.rounded-box {
+    width: 600px;  /* 設定方形的寬度 */
+    height: 90px; /* 設定方形的高度 */
+    border-radius: 15px;
+    cursor: pointer;
+    pointer-events: none;
+    display: flex;  /* 使用 flexbox 來垂直和水平居中文字 */
+    justify-content: center;  /* 水平居中 */
+    align-items: center;  /* 垂直居中 */
+    
+    font-size: 24px;  /* 設定文字大小 */
+    color: rgb(0, 0, 0);  /* 設定文字顏色 */
+}
+
+
+#FSIQ-box{
+    background-color: #000406b6; /*000406、4285f4、ea4335、fbbc05、34a853*/
+    color: rgb(255, 255, 255);  /* 設定文字顏色 */
+}
+
+#VCI-box{
+    background-color: #4286f4ac;
+}
+
+#WMI-box{
+    background-color: #ea4435a9;
+}
+
+#PRI-box{
+    background-color: #fbbd05a4;
+}
+
+#PSI-box{
+    background-color: #34a853b1;
+}
+
+.line {
+    position: absolute;
+    height: 77%;
+    width: 6px;
+    bottom: 65px;
+    border-radius: 8px;
+    opacity: 0.9;
+}
+
+.line1 { background-color: #000406b6; display: none;}
+.line2 { background-color: #4286f4ac; display: none;}
+.line3 { background-color: #ea4435a9; display: none;}
+.line4 { background-color: #fbbd05a4; display: none;}
+.line5 { background-color: #34a853b1; display: none;}
+
+/* 預設隱藏所有的說明圖片 */
+img.instruction {
+    display: none;
+    justify-content: center;
+    width: 80%;
+    height: 55%;
+    background-repeat: no-repeat;
+    /* position: fixed; */
+    min-width: 50%;
+    min-height: 50%;
+    /* margin-top: 10%; */
+
+}
+
+input.instruction-file {
+    display: none;
+    z-index: 100;
+}

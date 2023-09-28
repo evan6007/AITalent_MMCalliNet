@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>智力預測</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="home-icon">
+            <a href="/"><img src="{{ url_for('static', filename='indexicon.png') }}" alt="Home" width="100" height="80"></a>
+        </div>
+
+    <div class="nav-links">
+        <div class="dropdown">
+            <a href="">關於國北護</a>
+            <div class="dropdown-content">
+                <a href="https://www.ntunhs.edu.tw/">國北護網站</a>
+                <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Regular_Style_CJKV_Radical_186_%280%29.svg/1200px-Regular_Style_CJKV_Radical_186_%280%29.svg.png">國北護的秘密</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="">關於淡江</a>
+            <div class="dropdown-content">
+                <a href="https://www.tku.edu.tw/">淡江網站</a>
+                <a href="https://www.ais.tku.edu.tw/EleCos/login.aspx?ReturnUrl=%2felecos%2f">選課系統</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="">服務介紹</a>
+            <div class="dropdown-content">
+                <a href="/">智力測驗</a>
+                <a href="https://megapx-assets.dcard.tw/images/ae450e9e-7162-45ca-b1d5-3120018092d5/640.webp">超級巨猛測驗</a>
+                <!-- add as many as you need -->
+            </div>
+        </div>
+    </div>
+
+    </nav>
+    
+    <div class="options">
+        <div class="option" id="option1">
+            <span>近(遠)端 測驗</span>
+            <img src="{{ url_for('static', filename='near.png') }}" alt="Option 1">
+        </div>
+        <div class="option" id="option2">
+            <span>聽寫 測驗</span>
+            <img src="{{ url_for('static', filename='ear.png') }}" alt="Option 2">
+        </div>
+        <div class="option" id="option3">
+            <span>獨字 測驗</span>
+            <img src="{{ url_for('static', filename='indexicon.png') }}" alt="Option 3">
+        </div>
+    </div>
+    <div id="uploadSection" class="hidden">
+        <h2>智力預測</h2>
+        <p>上傳你的手寫字圖片</p>
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">上傳</button>
+    </div>
+
+    <script>
+
+    window.addEventListener('load', function() {
+        document.body.style.zoom = "100%";
+    });
+
+        var options = document.querySelectorAll('.option');
+        var uploadSection = document.getElementById('uploadSection');
+        options.forEach(function(option) {
+        option.addEventListener('click', function() {
+            window.location.href = "/page2";
+        });
+    });
+
+    document.getElementById('option1').addEventListener('click', function() {
+        // 保存一個值到 localStorage
+        localStorage.setItem('triggerOption2_1', 'true');
+    });
+    document.getElementById('option2').addEventListener('click', function() {
+        // 保存一個值到 localStorage
+        localStorage.setItem('triggerOption2_2', 'true');
+    });
+    document.getElementById('option3').addEventListener('click', function() {
+        // 保存一個值到 localStorage
+        localStorage.setItem('triggerOption2_3', 'true');
+    });
+
+    </script>
+    
+</body>
+</html>
