@@ -1,9 +1,30 @@
-<mxfile host="app.diagrams.net" modified="2024-04-29T11:55:14.974Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" version="24.3.1" etag="7y2pcXSdCs9WuFMYMwrY" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-29T12:15:57.043Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" etag="GeBEEKpMbcL4keqJWk_t" version="24.3.1" type="github">
   <diagram name="Page-1" id="lyASNQNYgEOY33pdEkeG">
-    <mxGraphModel>
+    <mxGraphModel dx="366" dy="663" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-1" value="my_rlgames_train.py" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="400" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-3" value="initialize_task" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="7BTzQu4oncoKRNLVJy2T-1">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-8" value="task_util.py" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="530" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-9" value="initialize_task:&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;env.set_task()" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="7BTzQu4oncoKRNLVJy2T-8">
+          <mxGeometry y="30" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7BTzQu4oncoKRNLVJy2T-3" target="7BTzQu4oncoKRNLVJy2T-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-14" value="cartpole.py" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="670" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7BTzQu4oncoKRNLVJy2T-15" value="CartpoleTask(RLTask)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="7BTzQu4oncoKRNLVJy2T-14">
+          <mxGeometry y="30" width="140" height="60" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
